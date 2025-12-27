@@ -1,5 +1,8 @@
 "use client"
 
+import words from "@/list.json"
+const randomWord = words[Math.floor(Math.random() * words.length)]
+
 import { useEffect, useRef, useState } from "react"
 import Grid from "./(components)/Grid"
 // const allGuess:string[] = [];
@@ -7,7 +10,7 @@ import Grid from "./(components)/Grid"
 export type Status = "correct" | "present" | "absent" | "none";
 
 export default function Home(){
-  const finalword = "brown"
+  const finalword = randomWord
   const [currentWord, setCurrentWord] = useState<string>("");
   const[row,setRow] = useState<number>(0)
   const [allGuesses, setAllGuesses] = useState<string[]>([])
@@ -38,6 +41,7 @@ export default function Home(){
 
       if(e.key=== "Enter" && word.length===5){
         checkCommon(word)
+        console.log(finalword)
         setRow(prev => prev + 1);
         setAllGuesses(prev => [...prev, word])
         setCurrentWord("")
