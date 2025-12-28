@@ -19,6 +19,8 @@ export default function Home() {
   const [row, setRow] = useState<number>(0)
   const [allGuesses, setAllGuesses] = useState<string[]>([])
   const [allResult, setAllResult] = useState<Status[][]>([])
+  const [dialogBox, setDialogBox] = useState<boolean>(false)
+  const [conclusion, setConclusion] = useState<string>("")
 
   function checkCommon(word: string) {
     const list: Status[] = []
@@ -31,7 +33,7 @@ export default function Home() {
         if (word[i] === finalword[j] && score !== "correct") score = "present";
       }
       list.push(score);
-
+      
       const char = word[i].toLowerCase();
       const currentBest = newUsedLetters[char];
 
@@ -49,15 +51,22 @@ export default function Home() {
     const upperKey = key.toUpperCase();
 
     if (upperKey === "ENTER") {
+      console.log(finalword)
       if (currentWord.length === 5) {
         checkCommon(currentWord.toLowerCase());
         setAllGuesses(prev => [...prev, currentWord.toLowerCase()]);
+        if(currentWord === finalword){
+          setDialogBox(true)
+          setConclusion("WINNER 🏆")
+        }
         setRow(prev => prev + 1);
+        if(row >= 5){
+          setDialogBox(true)
+          setConclusion("The word was : " + finalword)
+
+        }
         setCurrentWord("");
         
-        if (currentWord.toLowerCase() === finalword) {
-          setTimeout(() => alert("Winner! 🏆"), 500);
-        }
       }
     } else if (upperKey === "DELETE" || upperKey === "BACKSPACE") {
       setCurrentWord(prev => prev.slice(0, -1));
@@ -72,12 +81,17 @@ export default function Home() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentWord, row, finalword]);
+  }, [currentWord, row, finalword, dialogBox, conclusion]);
 
   return (
     <div className="bg-gray-950 h-screen flex flex-col items-center justify-center gap-10">
-      
       <div className="flex flex-col gap-2">
+        {/* <div className="text-white" >{finalword}</div> */}
+      <div>
+        {dialogBox ? 
+        <div className="text-red-400 font-bold flex justify-center text-2xl p-2">{conclusion}</div> 
+        : <div className=" opacity-0 text-2xl p-2">d</div>}
+      </div>
         {Array.from({ length: 6 }).map((_, index) => (
           <Grid
             key={index}
