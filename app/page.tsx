@@ -53,19 +53,25 @@ export default function Home() {
     if (upperKey === "ENTER") {
       console.log(finalword)
       if (currentWord.length === 5) {
-        checkCommon(currentWord.toLowerCase());
-        setAllGuesses(prev => [...prev, currentWord.toLowerCase()]);
-        if(currentWord === finalword){
-          setDialogBox(true)
-          setConclusion("WINNER 🏆")
+        if(!words.includes(currentWord)){
+          setDialogBox(true);
+          setConclusion("Word doesnt exists!")
+          setTimeout((e:any)=>setDialogBox(false),2000)
         }
-        setRow(prev => prev + 1);
-        if(row >= 5){
-          setDialogBox(true)
-          setConclusion("The word was : " + finalword)
-
+        else{
+          checkCommon(currentWord.toLowerCase());
+          setAllGuesses(prev => [...prev, currentWord.toLowerCase()]);
+          if(currentWord === finalword){
+            setDialogBox(true)
+            setConclusion("WINNER 🏆")
+          }
+          setRow(prev => prev + 1);
+          if(row >= 5){
+            setDialogBox(true)
+            setConclusion("The word was : " + finalword)  
+          }
+          setCurrentWord("");
         }
-        setCurrentWord("");
         
       }
     } else if (upperKey === "DELETE" || upperKey === "BACKSPACE") {
@@ -90,7 +96,7 @@ export default function Home() {
       <div>
         {dialogBox ? 
         <div className="text-red-400 font-bold flex justify-center text-2xl p-2">{conclusion}</div> 
-        : <div className=" opacity-0 text-2xl p-2">d</div>}
+        : <div className=" opacity-0 text-2xl p-2">s</div>}
       </div>
         {Array.from({ length: 6 }).map((_, index) => (
           <Grid
